@@ -1,31 +1,181 @@
-# React & Tailwind CSS Starter Pack
+# React Forms Learning
 
-This is a starter pack for creating React projects with Tailwind CSS configured. It uses React version **18.2** and Tailwind CSS version **3.2**.
+## Introduction
 
-## Usage
+This repository documents my learning about handling forms in React.js. Forms are an essential part of web applications, allowing users to input and submit data. React provides a way to handle forms efficiently using controlled and uncontrolled components.
 
-This starter pack includes a basic setup for using **Tailwind CSS with React**. To start building your own components and styles, follow these steps:
+## Topics Covered
 
-1. Clone the repository to your local machine.
-    ```sh
-    git clone https://github.com/thepranaygupta/react-tailwind-css-starter-pack.git
-    ```
+### 1. Controlled Components
 
-1. Install the required packages.
-    ```sh
-    cd react-tailwind-css-starter-pack
-    npm install
-    ```
+- Form elements like input, textarea, and select are controlled by React state.
+- Example:
 
-1. Start the development server.
-    ```sh
-    npm start
-    ```
-1. Open the project in your browser at [`http://localhost:3000`](http://localhost:3000) to view your project.
-1. Create your React components and add your styles using Tailwind classes. You can also create new CSS files and import them into your components.
+```jsx
+import React, { useState } from "react";
 
-The project is set up to use `postcss-cli` to process your CSS files. You can add your own `tailwind.config.js` file to customize your Tailwind setup.
+function ControlledForm() {
+  const [name, setName] = useState("");
 
-## Contributing
+  const handleChange = (event) => {
+    setName(event.target.value);
+  };
 
-Contributions are welcome! If you have any suggestions or find any issues, please feel free to open an issue or a pull request.
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    alert(`Submitted Name: ${name}`);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <label>
+        Name:
+        <input type="text" value={name} onChange={handleChange} />
+      </label>
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+
+export default ControlledForm;
+```
+
+### 2. Uncontrolled Components
+
+- Uses `useRef()` to directly access the DOM element.
+- Example:
+
+```jsx
+import React, { useRef } from "react";
+
+function UncontrolledForm() {
+  const inputRef = useRef(null);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    alert(`Submitted Name: ${inputRef.current.value}`);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <label>
+        Name:
+        <input type="text" ref={inputRef} />
+      </label>
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+
+export default UncontrolledForm;
+```
+
+### 3. Handling Multiple Inputs
+
+- Use a single state object to manage multiple input fields.
+- Example:
+
+```jsx
+import React, { useState } from "react";
+
+function MultiInputForm() {
+  const [formData, setFormData] = useState({ name: "", email: "" });
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    alert(`Name: ${formData.name}, Email: ${formData.email}`);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <label>
+        Name:
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+        />
+      </label>
+      <label>
+        Email:
+        <input
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+        />
+      </label>
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+
+export default MultiInputForm;
+```
+
+### 4. Form Validation
+
+- Basic form validation using state and conditions.
+- Example:
+
+```jsx
+import React, { useState } from "react";
+
+function FormValidation() {
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+
+  const handleChange = (event) => {
+    setEmail(event.target.value);
+    setError("");
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!email.includes("@")) {
+      setError("Invalid email address");
+    } else {
+      alert(`Submitted Email: ${email}`);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <label>
+        Email:
+        <input type="email" value={email} onChange={handleChange} />
+      </label>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+
+export default FormValidation;
+```
+
+## Conclusion
+
+This learning repository explores different ways of handling forms in React. It covers controlled components, uncontrolled components, handling multiple inputs, and form validation.
+
+## Future Enhancements
+
+- Implement advanced form handling using Formik and Yup.
+- Add real-time validation and error messages.
+- Integrate form submissions with a backend API.
+
+---
+
+## Author
+
+[Saurabh Saxena](https://github.com/Saurabhsaxena81)
+
+## License
+
+This project is open-source and available under the MIT License.
